@@ -9,7 +9,7 @@ interface SignupProps {
 }
 
 const Signup: React.FC<SignupProps> = ({ setAuth, setUser }) => {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,7 +24,7 @@ const Signup: React.FC<SignupProps> = ({ setAuth, setUser }) => {
       const response = await fetch("http://localhost:5000/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       const data = await response.json();
@@ -32,7 +32,7 @@ const Signup: React.FC<SignupProps> = ({ setAuth, setUser }) => {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         setAuth(true); // Set authentication state
-        setUser({ id: data.userId, name, email }); // Store user info
+        setUser({ id: data.userId, username, email }); // Store user info
         navigate("/"); // Redirect to home
       } else {
         setError(data.message || "Signup failed. Try again.");
@@ -49,14 +49,14 @@ const Signup: React.FC<SignupProps> = ({ setAuth, setUser }) => {
         <FaUser className="mx-auto text-3xl text-blue-500" />
         <h2 className="text-2xl font-bold mt-2">Create account!</h2>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <InputField
             type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             icon={<FaUser />}
           />
           <InputField
@@ -77,6 +77,13 @@ const Signup: React.FC<SignupProps> = ({ setAuth, setUser }) => {
             Create →
           </button>
         </form>
+
+        <p className="mt-4 text-sm">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-500 underline">
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );
